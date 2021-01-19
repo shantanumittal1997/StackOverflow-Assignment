@@ -1,0 +1,252 @@
+{% extends 'base.html' %}
+{% block title %}Home{% endblock %}
+{% block style %}
+    /* #id_q {
+        height: 100%;
+        width: 80%;
+    } */
+    /* .myBlock {
+        border: none;
+        padding: 5px;
+        font: 28px aerial;
+        width: 200px;
+        height: 200px;
+        overflow-y: scroll;
+    } */
+    .tableFixHead {
+        overflow-y: auto;
+        height: 106px;
+      }
+      .tableFixHead thead th {
+        position: sticky;
+        top: 0;
+      }
+{% endblock %}
+{% block content %}
+    {% if user.is_authenticated %}
+        <br>
+        <!-- <div class="container-fluid">
+            <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="true" aria-controls="collapseExample">
+                Search Form Toggle
+            </button>
+        </div> -->
+
+        <!-- <div class="collapse in" id="collapseExample"> -->
+        <form method="GET">
+            {% csrf_token %}
+            <div class="container-fluid" style="text-align: center; padding-right: 2rem; padding-left: 2rem;">
+                <div class="row">
+                    <div class="col-8" style="text-align: right;">
+                        <!-- <input type="text" style="height: 100%; width: 80%;" > -->
+                        {{ q_field }}
+                    </div>
+                    <div class="col-1" style="text-align: left;">
+                        <button type="submit" class="btn btn-success">Search</button>
+                    </div>
+                    <div class="col-2" style="text-align: left;">
+                        <a data-toggle="collapse" href="#filters" class="btn btn-outline-primary">Filters Toggle</a>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="container-fluid">
+                <div id="filters" class="collapse" style="text-align: center;">
+                <!-- <form method="GET"> -->
+                    <!-- <div> -->
+                        <div>
+                            {% for field_row in field_count %}
+                            <div class="row no-gutters">
+                                {% for field in field_row %}
+                                <div class="col-lg-1">
+                                    <label for="{{ field.label }}" style="display:inline-block;vertical-align:middle; text-align: left;">{{ field.label_tag }}</label>
+                                </div>
+                                <div class="col-lg-3">
+                                    {{ field }}
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <!-- {{ form.as_p }} -->
+                    <!-- </div> -->
+                    <!-- <form method="GET"> -->
+                        <!-- {% csrf_token %} -->
+                    <!-- {{ paginator.as_p }} -->
+                        <!-- <button type="submit">Filter</button>
+                    </form> -->
+                    <br>
+                    <!-- <div style="text-align: center;">
+                        <button class="btn btn-success shadow" type="submit">Search</button>
+                    </div> -->
+                <!-- </form> -->
+                </div>
+            </div>
+        </form>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-6" style="text-align: right;">
+                    {% if previous_page %}<a class="btn btn-light shadow" href="{{ request.get_full_path }}&page={{ previous_page }}"><i class="fa fa-chevron-left" aria-hidden="true"></i></a>{% endif %}
+                </div>
+                <div class="col-6" style="text-align: left;">
+                    {% if next_page %}<a class="btn btn-light shadow" href="{{ request.get_full_path }}&page={{ next_page }}"><i class="fa fa-chevron-right" aria-hidden="true"></i></a>{% endif %}
+                </div>
+            </div>
+        </div>
+        <br>
+        <!-- </div> -->
+        <table class="table">
+            <thead style="background: grey;">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Tags</th>
+                    <th scope="col">Owner</th>
+                    <th scope="col">Details</th>
+                </tr>
+            </thead>
+            <tbody style="background: #f3f3f3;">
+                {% if items %}
+                {% for item in items %}
+                <tr>
+                    <td scope="row"><b><i>{{ forloop.counter }}</i></b></td>
+                    <td>
+                        <ul class="list-group">
+                            {% for tag in item.tags %}
+                            <li class="list-group-item" style="background: lightgray;">{{ tag }}</li>    
+                            {% endfor %}
+                        </ul>
+                    </td>
+                    <td>
+                        <div class="card mb-3" style="max-width: 540px; background-color: lavender;">
+                            <div class="row no-gutters">
+                                <div class="col-md-4">
+                                    <div style="padding: 20px;">
+                                        <img src="{{ item.owner.profile_image }}" class="card-img" alt="profile" style="border-width: 10px; border: #f07f25;">
+                                    </div>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="card-body">
+                                        <div class="card-title">
+                                            <div class="row no-gutters">
+                                                <div class="col-10">
+                                                    <h5>{{ item.owner.display_name }}</h5>
+                                                </div>
+                                                <div class="col-2">
+                                                    <span><a class="btn btn-dark shadow-sm" href="{{ item.owner.link }}"><i class='fab fa-stack-overflow' style="color: #f07f25;"></i></a></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <span><span><b>User ID: </b></span>{{ item.owner.user_id }}</span><br>
+                                    <span><span><b>User Type: </b></span>{{ item.owner.user_type }}</span><br>
+                                    <span><span><b>Reputation: </b></span>{{ item.owner.reputation }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col-10 row no-gutters">
+                                        <div class="col-2">
+                                            <b>Title : </b>
+                                        </div>
+                                        <div class="col-10">
+                                            {{ item.title }}
+                                        </div>
+                                    </div>
+                                    <div class="col-2">
+                                        <a class="btn btn-light shadow-sm" href="{{ item.link }}"><i class="fas fa-link"></i></a>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="list-group-item" style="background: lightgray;">
+                                <ul class="list-group list-group-horizontal">
+                                    <li class="list-group-item">
+                                        <span><b>Is answered : </b></span>{{ item.is_answered }}
+                                    </li>
+                                    <li class="list-group-item">
+                                        <span><b>No. of answers : </b></span>{{ item.answer_count }}
+                                    </li>
+                                    <li class="list-group-item">
+                                        <span><b>No. of views : </b></span>{{ item.view_count }}
+                                    </li>
+                                    <li class="list-group-item">
+                                        <span><b>Score : </b></span>{{ item.score }}
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="list-group-item" style="background: lightgray;">
+                                <ul class="list-group list-group-horizontal">
+                                    <li class="list-group-item">
+                                        <span><b>Creation Date : </b></span>
+                                        <p>
+                                            {{ item.creation_date }}
+                                        </p>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <span><b>Last Activity Date : </b></span>
+                                        <p>
+                                            {{ item.last_activity_date }}
+                                        </p>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <span><b>Last Edit Date : </b></span>
+                                        <p>
+                                            {% if item.last_edit_date %}{{ item.last_edit_date }}{% else %}NA{% endif %}
+                                        </p>
+                                    </li>
+                                </ul>
+                            </li>    
+                            <li class="list-group-item" style="background:  lightgray;">
+                                <ul class="list-group list-group-horizontal">
+                                    <li class="list-group-item">
+                                        <span><b>Question ID : </b></span>{{ item.question_id }}
+                                    </li>
+                                    <li class="list-group-item">
+                                        <span><b>Accepted Answer ID : </b></span>{% if item.accepted_answer_id %}{{ item.accepted_answer_id }}{% else %}NA{% endif %}
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+                {% endfor %}
+                {% else %}
+                <tr>
+                    <td colspan="4" style="text-align: center; color: grey;">
+                        <p>{% if info_msg %}{{ info_msg }}{% else %}Search results come here{% endif %}</p>
+                    </td>
+                </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    {% else %}
+        <br>
+        <br>
+        <div class="row">
+            <div class="col-lg-4 col-md-2 col-sm-2"></div>
+            <div class="col-lg-4 col-md-8 col-sm-8">
+                <div style="padding-left: 10px; padding-right: 10px;">
+                    <h1 class="display-4">Hi, there!</h1>
+                    <hr class="my-4">
+                    <p class="lead">This project is built as an assignment as a part of interview process. The purpose of the project is to fetch related questions to the search fields from the <b><span style="color: #f07f25">Stack</span>Overflow</b> Search API</p>
+                    <div class="row">
+                        <div class="col-3">
+                            <a class="btn btn-outline-success shadow-sm" href="{% url 'main:register' %}">Register</a>
+                        </div>
+                        <div class="col-6"></div>
+                        <div class="col-3" style="text-align: right;">
+                            <a class="btn btn-outline-primary shadow-sm" href="{% url 'main:login' %}">Login</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-2 col-sm-2"></div>
+        </div>
+    {% endif %}
+    <br>
+    {% if msg %}
+        {{ msg }}
+    {% endif %}
+{% endblock %}

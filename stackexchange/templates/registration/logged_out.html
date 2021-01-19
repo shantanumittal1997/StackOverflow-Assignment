@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block title %}Log Out{% endblock %}
+{% block content %}
+    <h1>Logged Out</h1>
+    <!-- <form>
+        {% csrf_token %}
+        {{ form }}
+        <button type="submit">Log In</button>
+    </form> -->
+    <!-- <span>New here? <a href={% url 'main:register' %}>Register here</a></span> -->
+{% endblock %}
+{% block js_script %}
+    window.onload = function(){
+        window.location.replace("{% url 'main:home' %}")
+    }
+{% endblock %}

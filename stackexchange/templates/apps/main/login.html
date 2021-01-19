@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block title %}Login{% endblock %}
+{% block content %}
+    <br>
+    <br>
+    <div class="row">
+        <div class="col-lg-4 col-md-2 col-sm-2"></div>
+        <div class="col-lg-4 col-md-8 col-sm-8">
+            <div style="padding-left: 10px; padding-right: 10px;">
+                <h1 class="display-4">Login</h1>
+                <hr class="my-4">
+                <p class="lead">Enter your credentials to start using the API</p>
+                <br>
+                <form method="POST">
+                    {% csrf_token %}
+                    {% for field in form %}
+                        <div class="form-group row">
+                            <label for="{{ field.label }}" class="col-sm-3 col-form-label">{{ field.label_tag }}</label>
+                            <div class="col-sm-9">{{ field }}</div>
+                        </div>
+                    {% endfor %}
+                    <button type="submit" class="btn btn-outline-primary shadow-sm">Log In</button>
+                </form>
+                <br>
+                <span>New here? <a href={% url 'main:register' %} style="color:#f07f25">Register</a></span>
+                {% if error %}
+                    <br>
+                    <br>
+                    <span style="color:#c82a14">{{ error }}</span>
+                {% endif %}
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-2 col-sm-2"></div>
+    </div>
+{% endblock %}
